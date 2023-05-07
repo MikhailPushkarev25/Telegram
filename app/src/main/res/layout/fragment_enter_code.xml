@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragments.EnterCodeFragment">
+
+    <ImageView
+        android:id="@+id/imageId_register_number"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/fragment_number_register_height"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_image_number_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/imageid_register_number" />
+
+    <TextView
+        android:id="@+id/register_text_enter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/input_number_code"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSize_register_enter"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageId_register_number" />
+
+    <TextView
+        android:id="@+id/tvText_number_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        style="@style/smalText"
+        android:gravity="center"
+        android:text="@string/question_number_register"
+        app:layout_constraintTop_toBottomOf="@+id/register_text_enter"/>
+
+    <EditText
+        style="@style/editText"
+        android:id="@+id/register_input_code"
+        android:maxLength="6"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:hint="@string/six_number_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvText_number_register"
+        android:autofillHints=""
+        android:inputType="phone"
+        tools:ignore="LabelFor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

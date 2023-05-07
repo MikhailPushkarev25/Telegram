@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="settingsButtons">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/ripple_effect</item>
+    </style>
+
+    <style name="normalText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/settings_textSize_number</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginStart">@dimen/settings_marginTop_number</item>
+    </style>
+
+    <style name="smalText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/settings_textSize_number</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:layout_marginStart">@dimen/settings_marginTop_number</item>
+    </style>
+
+    <style name="separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/settings_view_height</item>
+        <item name="android:background">@color/gray</item>
+        <item name="android:layout_marginTop">@dimen/settings_view_marginTop</item>
+        <item name="android:layout_marginStart">@dimen/settings_view_marginStart</item>
+        <item name="android:layout_marginEnd">@dimen/settings_view_marginEnd</item>
+    </style>
+
+    <style name="mainToolBar">
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="editText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/editText_register</item>
+        <item name="android:layout_margin">@dimen/register_editText_margin</item>
+        <item name="android:padding">@dimen/appPadding</item>
+        <item name="android:inputType">phone</item>
+        <item name="android:textColorHint">@color/gray</item>
+    </style>
+</resources>

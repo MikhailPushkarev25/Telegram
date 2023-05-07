@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="settings_photo_username">55dp</dimen>
+    <dimen name="settings_photo_username_hight">55dp</dimen>
+
+    <dimen name="settings_btn_change_photo">45dp</dimen>
+    <dimen name="settings_btn_change_photo_hight">45dp</dimen>
+
+    <dimen name="settings_photo_textSize">16sp</dimen>
+    <dimen name="settings_photo_marginTop">16dp</dimen>
+
+    <dimen name="settings_border_photo">2dp</dimen>
+    <dimen name="settings_layout_hight">100dp</dimen>
+
+    <dimen name="settings_text_name_wight">0dp</dimen>
+    <dimen name="settings_text_name_marginTop">10dp</dimen>
+    <dimen name="settings_text_name_marginStart">16dp</dimen>
+    <dimen name="settings_text_set_width">0dp</dimen>
+    <dimen name="settings_textsize_textSet">14sp</dimen>
+    <dimen name="settings_textSet_marginTop">16dp</dimen>
+    <dimen name="vertical_large_marge">16dp</dimen>
+    <dimen name="settings_textSize_number">16sp</dimen>
+    <dimen name="settings_marginTop_number">16dp</dimen>
+    <dimen name="settings_marginTop_phoneNumber">8dp</dimen>
+    <dimen name="settings_text_account_size">16sp</dimen>
+    <dimen name="settings_textSize_number_update">14sp</dimen>
+    <dimen name="settings_view_height">1dp</dimen>
+    <dimen name="settings_view_marginTop">9dp</dimen>
+    <dimen name="settings_view_marginStart">16dp</dimen>
+    <dimen name="settings_view_marginEnd">16dp</dimen>
+    <dimen name="settings_radios_circle">4dp</dimen>
+    <dimen name="editText_register">16sp</dimen>
+    <dimen name="register_editText_margin">16dp</dimen>
+    <dimen name="appPadding">10dp</dimen>
+    <dimen name="fragment_marginTop_number_register">56dp</dimen>
+    <dimen name="fragment_number_register_height">70dp</dimen>
+    <dimen name="textSize_register_enter">16sp</dimen>
+    <!--Settings fragment-->
+</resources>
