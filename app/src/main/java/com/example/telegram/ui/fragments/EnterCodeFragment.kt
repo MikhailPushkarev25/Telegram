@@ -39,21 +39,24 @@ class EnterCodeFragment(val phoneNumber: String, val id: String) : Fragment() {
     private fun enterCode() {
         val code = phone.registerInputCode.text.toString()
         val credential = PhoneAuthProvider.getCredential(id, code)
-        AUTH.signInWithCredential(credential).addOnCompleteListener{
-            if (it.isSuccessful) {
+        AUTH.signInWithCredential(credential).addOnCompleteListener{ auth ->
+            if (auth.isSuccessful) {
                 val uid = AUTH.currentUser?.uid.toString()
                 val dateMap = mutableMapOf<String, Any>()
                 dateMap[CHILD_ID] = uid
                 dateMap[CHILD_PHONE] = phoneNumber
                 dateMap[CHILD_USERNAME] = uid
-
-                REF_DATA_BASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dateMap).addOnCompleteListener {task ->
-                    if (task.isSuccessful) {
-                        showToast("Добро пожаловать")
-                        (activity as RegisterActivity).replaceActivity(MainActivity())
-                    } else showToast(task.exception?.message.toString())
-                }
-            } else showToast(it.exception?.message.toString())
+                REF_DATA_BASE_ROOT.child(NODE_PHONES).child(phoneNumber).setValue(uid)
+                    .addOnFailureListener { showToast(it.message.toString()) }
+                    .addOnSuccessListener {
+                        REF_DATA_BASE_ROOT.child(NODE_USERS).child(uid).updateChildren(dateMap)
+                            .addOnSuccessListener {
+                                showToast("Добро пожаловать")
+                                (activity as RegisterActivity).replaceActivity(MainActivity())
+                            }
+                            .addOnFailureListener { showToast(it.message.toString()) }
+                    }
+            } else showToast(auth.exception?.message.toString())
         }
     }
 }

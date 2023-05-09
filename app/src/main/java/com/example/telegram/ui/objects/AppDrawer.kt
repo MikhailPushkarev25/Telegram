@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegram.R
+import com.example.telegram.ui.fragments.ContactsFragment
 import com.example.telegram.ui.fragments.SetingsFragment
+import com.example.telegram.utilits.APP_ACTIVITY
 import com.example.telegram.utilits.USER
 import com.example.telegram.utilits.downLoadAndSetImage
 import com.example.telegram.utilits.replaceFragment
@@ -23,7 +25,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 
-class AppDrawer (val activity: AppCompatActivity, val toolBar: Toolbar){
+class AppDrawer {
 
     private lateinit var driver: Drawer
     private lateinit var header: AccountHeader
@@ -39,26 +41,26 @@ class AppDrawer (val activity: AppCompatActivity, val toolBar: Toolbar){
 
     fun disableDriver() {
         driver.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        toolBar.setNavigationOnClickListener {
-            activity.supportFragmentManager.popBackStack()
+        APP_ACTIVITY.toolBar.setNavigationOnClickListener {
+            APP_ACTIVITY.supportFragmentManager.popBackStack()
         }
     }
 
     fun enableDriver() {
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         driver.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        toolBar.setNavigationOnClickListener {
+        APP_ACTIVITY.toolBar.setNavigationOnClickListener {
             driver.openDrawer()
         }
     }
 
     private fun createDriver() {
         driver = DrawerBuilder()
-            .withActivity(activity)
-            .withToolbar(toolBar)
+            .withActivity(APP_ACTIVITY)
+            .withToolbar(APP_ACTIVITY.toolBar)
             .withActionBarDrawerToggle(true)
             .withSelectedItem(-1)
             .withAccountHeader(header)
@@ -115,17 +117,19 @@ class AppDrawer (val activity: AppCompatActivity, val toolBar: Toolbar){
                     position: Int,
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
-                    when(position) {
-
-                        7 -> {
-                            activity.replaceFragment(SetingsFragment())
-                        }
-                    }
+                    clickToItem(position)
                     return false
                 }
 
             })
             .build()
+    }
+
+    private fun clickToItem(position: Int) {
+        when(position) {
+            7 -> APP_ACTIVITY.replaceFragment(SetingsFragment())
+            4 -> APP_ACTIVITY.replaceFragment(ContactsFragment())
+        }
     }
 
     private fun createHeader() {
@@ -135,7 +139,7 @@ class AppDrawer (val activity: AppCompatActivity, val toolBar: Toolbar){
             .withIcon(USER.photoUrl)
             .withIdentifier(200)
         header = AccountHeaderBuilder()
-            .withActivity(activity)
+            .withActivity(APP_ACTIVITY)
             .withHeaderBackground(R.drawable.header)
             .addProfiles(
                 currentProfile
