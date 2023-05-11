@@ -74,50 +74,37 @@ inline fun initUser(crossinline function: () -> Unit) {
             function()
         })
 }
+// Функция добавляет номер телефона и id в базу данных
+fun updatePhonesToDataBase(arrayContacts: ArrayList<CommonModel>) {
+    if (AUTH.currentUser != null) {
+        REF_DATA_BASE_ROOT.child(NODE_PHONES)
+            .addListenerForSingleValueEvent(AppValueEventListener { snapshot ->
+                snapshot.children.forEach { dataSnapshot ->
+                    arrayContacts.forEach { contact ->
+                        if (dataSnapshot.key == contact.phone) {
+                            REF_DATA_BASE_ROOT
+                                .child(NODE_PHONES_CONTACTS)
+                                .child(UID)
+                                .child(dataSnapshot.value.toString())
+                                .child(CHILD_ID)
+                                .setValue(dataSnapshot.value.toString())
+                                .addOnFailureListener { showToast(it.message.toString()) }
 
-@SuppressLint("Range")
-fun initContacts() {
-    if (checkPermissions(READ_CONTACT)) {
-        var arrayContacts = arrayListOf<CommonModel>()
-        val cursor = APP_ACTIVITY.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            null,
-            null,
-            null,
-            null
-        )
-        cursor?.let {
-            while (it.moveToNext()) {
-                val fullName = it.getString(it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                val phone = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                val newModel = CommonModel()
-                newModel.fullname = fullName
-                newModel.phone = phone.replace(Regex("[\\s, -]"), "")
-                arrayContacts.add(newModel)
-            }
-        }
-        cursor?.close()
-        updatePhonesToDataBase(arrayContacts)
+                            REF_DATA_BASE_ROOT
+                                .child(NODE_PHONES_CONTACTS)
+                                .child(UID)
+                                .child(dataSnapshot.value.toString())
+                                .child(CHILD_FULLNAME)
+                                .setValue(contact.fullname)
+                                .addOnFailureListener { showToast(it.message.toString()) }
+
+                        }
+                    }
+                }
+            })
     }
 }
 
-fun updatePhonesToDataBase(arrayContacts: ArrayList<CommonModel>) {
-    REF_DATA_BASE_ROOT.child(NODE_PHONES).addListenerForSingleValueEvent(AppValueEventListener{ snapshot ->
-        snapshot.children.forEach { dataSnapshot ->
-            arrayContacts.forEach { contact->
-                if (dataSnapshot.key == contact.phone) {
-                    REF_DATA_BASE_ROOT
-                        .child(NODE_PHONES_CONTACTS)
-                        .child(UID)
-                        .child(dataSnapshot.value.toString())
-                        .child(CHILD_ID)
-                        .setValue(dataSnapshot.value.toString())
-                        .addOnFailureListener{ showToast(it.message.toString()) }
-
-                }
-            }
-        }
-    })
-}
-
 fun DataSnapshot.getCommonModel(): CommonModel = this.getValue(CommonModel::class.java) ?: CommonModel()
+
+fun DataSnapshot.getUserModel(): User = this.getValue(User::class.java) ?: User()

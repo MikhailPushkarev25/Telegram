@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initFields() {
-        toolBar = binding.mainToolBar
+        toolBar = binding.mainToolbar
         appDrawer = AppDrawer()
     }
 

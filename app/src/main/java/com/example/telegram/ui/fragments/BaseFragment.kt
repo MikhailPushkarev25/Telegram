@@ -1,11 +1,7 @@
 package com.example.telegram.ui.fragments
 
-import android.os.Bundle
-import android.view.*
 import androidx.fragment.app.Fragment
 import com.example.telegram.MainActivity
-import com.example.telegram.R
-import com.example.telegram.databinding.FragmentBaseBinding
 
 open class BaseFragment : Fragment() {
 
