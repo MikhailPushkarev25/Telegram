@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.telegram.activites.RegisterActivity
+import com.example.telegram.database.AUTH
+import com.example.telegram.database.initFireBase
+import com.example.telegram.database.initUser
 import com.example.telegram.databinding.ActivityMainBinding
-import com.example.telegram.ui.fragments.ChatFragment
+import com.example.telegram.ui.fragments.MainFragment
+import com.example.telegram.ui.fragments.register.EnterFoneNumberFragment
 import com.example.telegram.ui.objects.AppDrawer
 import com.example.telegram.utilits.*
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var appDrawer: AppDrawer
     lateinit var toolBar: Toolbar
 
+    //Главный активити
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -35,19 +39,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
+    //При инициализации проверяет авторизован ли пользователь
     private fun initFunc() {
+        setSupportActionBar(toolBar)
         if (AUTH.currentUser != null) {
-            setSupportActionBar(toolBar)
             appDrawer.create()
-            replaceFragment(ChatFragment(), false)
+            replaceFragment(MainFragment(), false)
         } else {
-            replaceActivity(RegisterActivity())
+            replaceFragment(EnterFoneNumberFragment(), false)
         }
     }
 
+    //Инициализация тулбара и драйвера
     private fun initFields() {
         toolBar = binding.mainToolbar
         appDrawer = AppDrawer()
@@ -63,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         AppStates.updateState(AppStates.OFFLINE)
     }
 
+    //если контакты совпадают в базе и в телефоне выполняем метод считывания
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

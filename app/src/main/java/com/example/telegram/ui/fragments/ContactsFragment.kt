@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegram.R
+import com.example.telegram.database.*
 import com.example.telegram.databinding.FragmentContactsBinding
 import com.example.telegram.models.CommonModel
+import com.example.telegram.ui.fragments.singleChat.SingleChatFragment
 import com.example.telegram.utilits.*
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -40,6 +42,7 @@ class ContactsFragment : BaseFragment() {
         initRecycleView()
     }
 
+    //Функция для заполнения из базы тулбар в контактах
     private fun initRecycleView() {
         recycleView = contacts.contactsRecycleView
         refContacts = REF_DATA_BASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)

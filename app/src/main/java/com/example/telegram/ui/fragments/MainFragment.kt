@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.telegram.R
 import com.example.telegram.databinding.FragmentChatBinding
+import com.example.telegram.utilits.APP_ACTIVITY
+import com.example.telegram.utilits.hideKeyBoard
 
-class ChatFragment : Fragment() {
+class MainFragment : Fragment() {
     lateinit var chat: FragmentChatBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -21,7 +21,9 @@ class ChatFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
-
+        APP_ACTIVITY.title = "Telegram"
+        APP_ACTIVITY.appDrawer.enableDriver()
+        hideKeyBoard()
     }
 
 }

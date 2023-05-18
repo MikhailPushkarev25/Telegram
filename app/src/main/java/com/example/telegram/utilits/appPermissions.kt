@@ -8,8 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.PackageManagerCompat
 
 const val READ_CONTACT = Manifest.permission.READ_CONTACTS
+const val RECORD_AUDIO = Manifest.permission.RECORD_AUDIO
 const val PERMISSION_REQUEST_CODE = 200
 
+    //Функция запрашивает разрешение на чтение из телефона
 fun checkPermissions(permissions: String): Boolean {
     return if (Build.VERSION.SDK_INT >= 23
         && ContextCompat.checkSelfPermission(APP_ACTIVITY, permissions) != PackageManager.PERMISSION_GRANTED) {

@@ -4,14 +4,12 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegram.R
 import com.example.telegram.ui.fragments.ContactsFragment
 import com.example.telegram.ui.fragments.SetingsFragment
 import com.example.telegram.utilits.APP_ACTIVITY
-import com.example.telegram.utilits.USER
+import com.example.telegram.database.USER
 import com.example.telegram.utilits.downLoadAndSetImage
 import com.example.telegram.utilits.replaceFragment
 import com.mikepenz.materialdrawer.AccountHeader
@@ -39,6 +37,7 @@ class AppDrawer {
         drawerLayout = driver.drawerLayout
     }
 
+    //Функция определяет закрытие меню и вместо гамбургера выводит стрелку
     fun disableDriver() {
         driver.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
         APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -48,6 +47,7 @@ class AppDrawer {
         }
     }
 
+    //Функция определяет открытие меню и вместо стрелки выводит гамбургер
     fun enableDriver() {
         APP_ACTIVITY.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         driver.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
@@ -57,6 +57,7 @@ class AppDrawer {
         }
     }
 
+    //Все параметры в выпадющем блоке
     private fun createDriver() {
         driver = DrawerBuilder()
             .withActivity(APP_ACTIVITY)
@@ -125,13 +126,15 @@ class AppDrawer {
             .build()
     }
 
+    //Проверка по id по клику на параметр
     private fun clickToItem(position: Int) {
         when(position) {
-            7 -> APP_ACTIVITY.replaceFragment(SetingsFragment())
-            4 -> APP_ACTIVITY.replaceFragment(ContactsFragment())
+            7 -> replaceFragment(SetingsFragment())
+            4 -> replaceFragment(ContactsFragment())
         }
     }
 
+    //Функция отображает данные в выпадающей строке
     private fun createHeader() {
         currentProfile = ProfileDrawerItem()
             .withName(USER.fullname)
@@ -146,6 +149,7 @@ class AppDrawer {
             ).build()
     }
 
+    //Функция меняет в реальном времени данные в выпадающем блоке
     fun updateHeader() {
         currentProfile
             .withName(USER.fullname)
@@ -154,6 +158,7 @@ class AppDrawer {
         header.updateProfile(currentProfile)
     }
 
+    //Функция устанавливает фото с помощью библиотеки
     private fun initLoader() {
         DrawerImageLoader.init(object: AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView, uri: Uri, placeholder: Drawable) {

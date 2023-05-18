@@ -8,6 +8,7 @@ import com.example.telegram.utilits.hideKeyBoard
 
 open class BaseChangeFragment : Fragment() {
 
+    //Основной фрагмент от которого будут расширяться другие
     override fun onStart() {
         super.onStart()
         setHasOptionsMenu(true)

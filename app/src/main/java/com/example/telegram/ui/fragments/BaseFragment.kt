@@ -5,6 +5,7 @@ import com.example.telegram.MainActivity
 
 open class BaseFragment : Fragment() {
 
+    //Основной фрагмент от которого будут расширяться другие
     override fun onStart() {
         super.onStart()
         if (activity is MainActivity) {
@@ -12,10 +13,10 @@ open class BaseFragment : Fragment() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        if (activity is MainActivity) {
-            (activity as MainActivity).appDrawer.enableDriver()
-        }
-    }
+//    override fun onStop() {
+//        super.onStop()
+//        if (activity is MainActivity) {
+//            (activity as MainActivity).appDrawer.enableDriver()
+//        }
+//    }
 }

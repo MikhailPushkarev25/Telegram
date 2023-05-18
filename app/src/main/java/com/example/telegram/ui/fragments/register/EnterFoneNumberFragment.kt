@@ -1,18 +1,14 @@
-package com.example.telegram.ui.fragments
+package com.example.telegram.ui.fragments.register
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.telegram.MainActivity
 import com.example.telegram.R
-import com.example.telegram.activites.RegisterActivity
+import com.example.telegram.database.AUTH
 import com.example.telegram.databinding.FragmentEnterFoneNumberBinding
-import com.example.telegram.utilits.AUTH
-import com.example.telegram.utilits.replaceActivity
-import com.example.telegram.utilits.replaceFragment
-import com.example.telegram.utilits.showToast
+import com.example.telegram.utilits.*
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -34,6 +30,7 @@ class EnterFoneNumberFragment : Fragment() {
         return phone.root
     }
 
+    //При старте фрагмента считывает ввод пользователем номер телефона
     override fun onStart() {
         super.onStart()
         callBack = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -42,7 +39,7 @@ class EnterFoneNumberFragment : Fragment() {
                 AUTH.signInWithCredential(credential).addOnCompleteListener{
                     if (it.isSuccessful) {
                         showToast("Добро пожаловать")
-                        (activity as RegisterActivity).replaceActivity(MainActivity())
+                        restartActivity()
                     } else showToast(it.exception?.message.toString())
                 }
             }
@@ -68,12 +65,13 @@ class EnterFoneNumberFragment : Fragment() {
         }
     }
 
+    //Функция дает доступ базе данных на авторизацию по номеру телефона
     private fun authUser() {
         phoneNumber = phone.registerInputPhoneNumber.text.toString()
         PhoneAuthProvider.verifyPhoneNumber(
             PhoneAuthOptions
                 .newBuilder(FirebaseAuth.getInstance())
-                .setActivity(activity as RegisterActivity)
+                .setActivity(APP_ACTIVITY)
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setCallbacks(callBack)

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.EnterFoneNumberFragment">
+    tools:context=".ui.fragments.register.EnterFoneNumberFragment">
 
     <EditText
         android:hint="@string/enter_phone_hint"
