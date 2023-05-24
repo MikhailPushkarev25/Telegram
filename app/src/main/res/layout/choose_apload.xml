@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    android:background="@drawable/bg_reciving_message"
+    android:id="@+id/bottom_sheet_choice"
+    android:layout_height="70dp">
+    
+    <ImageView
+        android:id="@+id/btn_attach_image"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_image_24"
+        android:layout_margin="@dimen/appPadding"/>
+
+    <ImageView
+        android:id="@+id/btn_attach_file"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_insert_drive_file_24"
+        android:layout_margin="@dimen/appPadding"/>
+
+</LinearLayout>

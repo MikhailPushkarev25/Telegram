@@ -9,8 +9,8 @@ import com.example.telegram.database.AUTH
 import com.example.telegram.database.initFireBase
 import com.example.telegram.database.initUser
 import com.example.telegram.databinding.ActivityMainBinding
-import com.example.telegram.ui.fragments.MainFragment
-import com.example.telegram.ui.fragments.register.EnterFoneNumberFragment
+import com.example.telegram.ui.screense.MainFragment
+import com.example.telegram.ui.screense.register.EnterFoneNumberFragment
 import com.example.telegram.ui.objects.AppDrawer
 import com.example.telegram.utilits.*
 import kotlinx.coroutines.CoroutineScope

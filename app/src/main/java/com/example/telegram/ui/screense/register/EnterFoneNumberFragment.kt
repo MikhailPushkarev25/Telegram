@@ -1,4 +1,4 @@
-package com.example.telegram.ui.fragments.register
+package com.example.telegram.ui.screense.register
 
 import android.os.Bundle
 import android.view.LayoutInflater

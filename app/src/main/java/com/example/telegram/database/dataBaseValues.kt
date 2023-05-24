@@ -16,6 +16,7 @@ lateinit var USER: User
 const val TYPE_TEXT = "text"
 const val TYPE_MESSAGE_IMAGE = "image"
 const val TYPE_MESSAGE_VOICE = "voice"
+const val TYPE_MESSAGE_FILE = "file"
 
 // ссылка на картинку
 const val FOLDER_PROFILE_IMAGE = "profile_image"

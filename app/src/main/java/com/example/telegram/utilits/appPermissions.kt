@@ -3,12 +3,14 @@ package com.example.telegram.utilits
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PackageManagerCompat
 
 const val READ_CONTACT = Manifest.permission.READ_CONTACTS
 const val RECORD_AUDIO = Manifest.permission.RECORD_AUDIO
+const val WRITE_FILES = Manifest.permission.WRITE_EXTERNAL_STORAGE
 const val PERMISSION_REQUEST_CODE = 200
 
     //Функция запрашивает разрешение на чтение из телефона

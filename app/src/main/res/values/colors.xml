@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="green_message">#8FBD91</color>
+    <color name="green_message_two">#1B531D</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_subtext">#8DFFFFFF</color>
     <color name="telegram_root">#0088cc</color>

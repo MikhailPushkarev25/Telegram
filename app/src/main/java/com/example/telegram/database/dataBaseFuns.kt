@@ -13,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.File
 
 // Инициализация самой базы данных
 fun initFireBase() {
@@ -195,7 +196,7 @@ fun setNameToDataBase(fullname: String) {
 }
 
 //Функция берет ссылку из базы и скачивает пользователю в чат
-fun sendMessageAsFile(receivingUserId: String, fileUrl: String, messageKey: String, typeMessage: String) {
+fun sendMessageAsFile(receivingUserId: String, fileUrl: String, messageKey: String, typeMessage: String, filename: String) {
     val refDialogUser = "$NODE_MESSAGES/$UID/$receivingUserId"
     val refDialogReceivingUser = "$NODE_MESSAGES/$receivingUserId/$UID"
 
@@ -205,6 +206,7 @@ fun sendMessageAsFile(receivingUserId: String, fileUrl: String, messageKey: Stri
     mapMessage[CHILD_ID] = messageKey
     mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
     mapMessage[CHILD_FILE_URL] = fileUrl
+    mapMessage[CHILD_TEXT] = filename
 
     val mapDialog = hashMapOf<String, Any>()
     mapDialog["$refDialogUser/$messageKey"] = mapMessage
@@ -220,13 +222,21 @@ fun getMessageKey(id: String) = REF_DATA_BASE_ROOT.child(NODE_MESSAGES).child(UI
     .child(id).push().key.toString()
 
 // Функция сохраняет аудио файл по окончании записи
-fun uploadFileToStorage(uri: Uri, messageKey: String, receivingId: String, typeMessage: String) {
+fun uploadFileToStorage(uri: Uri, messageKey: String, receivingId: String, typeMessage: String, filename: String = "") {
     val paf = REF_STORAGE_ROOT
         .child(FOLDER_FILES)
         .child(messageKey)
     putFileToStorage(uri, paf) {
         getUrlFromStorage(paf) {
-            sendMessageAsFile(receivingId, it, messageKey, typeMessage)
+            sendMessageAsFile(receivingId, it, messageKey, typeMessage, filename)
         }
     }
+}
+
+//Функция берет файл из базы данных
+fun getFileFromStorage(file: File, fileUrl: String, function: () -> Unit) {
+    val path = REF_STORAGE_ROOT.storage.getReferenceFromUrl(fileUrl)
+    path.getFile(file)
+        .addOnSuccessListener { function() }
+        .addOnFailureListener { showToast(it.message.toString()) }
 }
