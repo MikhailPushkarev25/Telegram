@@ -1,9 +1,10 @@
-package com.example.telegram.ui.screense
+package com.example.telegram.ui.screense.settings
 
 import android.os.Bundle
 import android.view.*
 import com.example.telegram.database.*
 import com.example.telegram.databinding.FragmentChangeBioBinding
+import com.example.telegram.ui.screense.base.BaseChangeFragment
 
 class ChangeBioFragment : BaseChangeFragment() {
     lateinit var bio: FragmentChangeBioBinding

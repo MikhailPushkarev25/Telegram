@@ -14,6 +14,10 @@ data class CommonModel(
     var from: String = "",
     var timeStamp: Any = "",
     var fileUrl: String = "empty",
+    //Поле для вывода на главный экран последнее сообщение
+    var lastMessage: String = "",
+// Выбор контактов
+    var choice: Boolean = false
 
 
     ) {

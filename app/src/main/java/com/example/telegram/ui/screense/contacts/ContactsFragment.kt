@@ -1,4 +1,4 @@
-package com.example.telegram.ui.screense
+package com.example.telegram.ui.screense.contacts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import com.example.telegram.R
 import com.example.telegram.database.*
 import com.example.telegram.databinding.FragmentContactsBinding
 import com.example.telegram.models.CommonModel
+import com.example.telegram.ui.screense.base.BaseFragment
 import com.example.telegram.ui.screense.singleChat.SingleChatFragment
 import com.example.telegram.utilits.*
 import com.firebase.ui.database.FirebaseRecyclerAdapter

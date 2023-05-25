@@ -1,10 +1,11 @@
-package com.example.telegram.ui.screense
+package com.example.telegram.ui.screense.settings
 
 import android.os.Bundle
 import android.view.*
 import com.example.telegram.R
 import com.example.telegram.database.*
 import com.example.telegram.databinding.FragmentChangeNameBinding
+import com.example.telegram.ui.screense.base.BaseChangeFragment
 import com.example.telegram.utilits.*
 
 class ChangeNameFragment : BaseChangeFragment() {

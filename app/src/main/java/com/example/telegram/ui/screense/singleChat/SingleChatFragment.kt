@@ -1,14 +1,10 @@
 package com.example.telegram.ui.screense.singleChat
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AbsListView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,8 +15,9 @@ import com.example.telegram.database.*
 import com.example.telegram.databinding.FragmentSingleChatBinding
 import com.example.telegram.models.CommonModel
 import com.example.telegram.models.User
-import com.example.telegram.ui.screense.BaseFragment
+import com.example.telegram.ui.screense.base.BaseFragment
 import com.example.telegram.ui.message_recycle_view.view_holder.AppViewFactory
+import com.example.telegram.ui.screense.main_list.MainListFragment
 import com.example.telegram.utilits.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.database.DatabaseReference
@@ -63,6 +60,7 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initFields() {
+        setHasOptionsMenu(true)
         bottomSheetBehavior = BottomSheetBehavior.from(singleChat.cheet.bottomSheetChoice)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         appVoiceRecord = AppVoiceRecord()
@@ -172,11 +170,13 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     isScrolling = true
+                    //Когда очищаем чат что бы прогрузка при обновлении не крутилась убираем свайпом
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
         })
-        // При свайпе обновляются элементы
-        swipeRefreshLayout.setOnRefreshListener { updateData() }
+            // При свайпе обновляются элементы
+            swipeRefreshLayout.setOnRefreshListener { updateData() }
     }
 
     //Функция добавляет 10 элементов при скроллинге вверх
@@ -201,7 +201,8 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
             val message = singleChat.chatInputMessage.text.toString()
             if (message.isEmpty()) {
                 showToast("Необходимо ввести сообщение!")
-            } else sendMessage(message, contact.id, TYPE_TEXT) {
+            } else sendMessage(message, contact.id, TYPE_MESSAGE_TEXT) {
+                saveToMainList(contact.id, TYPE_CHAT)
                 singleChat.chatInputMessage.setText("")
             }
         }
@@ -251,5 +252,25 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
         super.onDestroyView()
         appVoiceRecord.releaseRecord()
         adapter.destroy()
+    }
+
+    //Функция создает выпадющее меню
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        activity?.menuInflater?.inflate(R.menu.single_chat_actions_menu, menu)
+    }
+
+    //Функция отрабатывает при выходе и меняет статус слушает пункты меню
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_clear_chat -> clearChat(contact.id) {
+                showToast("Чат очищен!")
+                replaceFragment(MainListFragment())
+            }
+            R.id.menu_delete_chat -> deleteChat(contact.id) {
+                showToast("Чат удален!")
+                replaceFragment(MainListFragment())
+            }
+        }
+        return true
     }
 }

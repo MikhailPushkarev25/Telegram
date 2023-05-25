@@ -1,4 +1,4 @@
-package com.example.telegram.ui.screense
+package com.example.telegram.ui.screense.settings
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 
@@ -8,6 +8,7 @@ import android.view.*
 import com.example.telegram.R
 import com.example.telegram.database.*
 import com.example.telegram.databinding.FragmentSetingsBinding
+import com.example.telegram.ui.screense.base.BaseFragment
 import com.example.telegram.utilits.*
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -54,26 +55,26 @@ class SetingsFragment : BaseFragment() {
             .start(APP_ACTIVITY, this)
     }
 
-    //Фуекция создает меню
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        activity?.menuInflater?.inflate(R.menu.settings_actions_menu, menu)
-    }
-
-    //Функция отрабатывает при выходе и меняет статус
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.settings_menu_change_exit -> {
-                AppStates.updateState(AppStates.OFFLINE)
-                AUTH.signOut()
-                restartActivity()
-            }
-
-            R.id.settings_menu_change_name -> {
-                replaceFragment(ChangeNameFragment())
-            }
+        //Фуекция создает меню
+        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+            activity?.menuInflater?.inflate(R.menu.settings_actions_menu, menu)
         }
-        return true
-    }
+
+        //Функция отрабатывает при выходе и меняет статус
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            when(item.itemId) {
+                R.id.settings_menu_change_exit -> {
+                    AppStates.updateState(AppStates.OFFLINE)
+                    AUTH.signOut()
+                    restartActivity()
+                }
+
+                R.id.settings_menu_change_name -> {
+                    replaceFragment(ChangeNameFragment())
+                }
+            }
+            return true
+        }
 
     //получение результата установки или изменения фото
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

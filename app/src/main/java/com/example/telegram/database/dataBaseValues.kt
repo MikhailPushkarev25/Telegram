@@ -13,10 +13,14 @@ lateinit var REF_STORAGE_ROOT: StorageReference
 lateinit var USER: User
 
 // Тип отправленного сообщения
-const val TYPE_TEXT = "text"
+const val TYPE_MESSAGE_TEXT = "text"
 const val TYPE_MESSAGE_IMAGE = "image"
 const val TYPE_MESSAGE_VOICE = "voice"
 const val TYPE_MESSAGE_FILE = "file"
+const val TYPE_CHAT = "chat"
+const val TYPE_GROUP = "group"
+const val TYPE_CHANNEL = "channel"
+
 
 // ссылка на картинку
 const val FOLDER_PROFILE_IMAGE = "profile_image"
@@ -45,4 +49,8 @@ const val CHILD_TYPE = "type"
 const val CHILD_FROM = "from"
 const val CHILD_TIMESTAMP = "timeStamp"
 const val CHILD_FILE_URL = "fileUrl"
+
+//Ноды для вывода чатов на главный экран
+const val NODE_MAIN_LIST = "main_list"
+
 

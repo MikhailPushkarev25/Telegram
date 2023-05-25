@@ -1,6 +1,7 @@
 package com.example.telegram.database
 
 import android.net.Uri
+import android.provider.Contacts.Intents.UI
 import com.example.telegram.R
 import com.example.telegram.models.CommonModel
 import com.example.telegram.models.User
@@ -239,4 +240,58 @@ fun getFileFromStorage(file: File, fileUrl: String, function: () -> Unit) {
     path.getFile(file)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
+}
+
+//Функция выводит чат на главный экран активити
+fun saveToMainList(id: String, type: String) {
+    val refUser = "$NODE_MAIN_LIST/$UID/$id"
+    val refReceived = "$NODE_MAIN_LIST/$id/$UID"
+
+    val mapUser = hashMapOf<String, Any>()
+    val mapReceived = hashMapOf<String, Any>()
+
+    mapUser[CHILD_ID] = id
+    mapUser[CHILD_TYPE] = type
+
+    mapReceived[CHILD_ID] = UID
+    mapReceived[CHILD_TYPE] = type
+
+    val commonMap = hashMapOf<String, Any>()
+
+    commonMap[refUser] = mapUser
+    commonMap[refReceived] = mapReceived
+
+    REF_DATA_BASE_ROOT.updateChildren(commonMap)
+        .addOnFailureListener { showToast(it.message.toString()) }
+}
+
+//Функция Удаляет из базы данных ноды собеседника и свой чат
+fun deleteChat(id: String, function: () -> Unit) {
+    //Ищем ноду с id и удаляем в main_list
+    REF_DATA_BASE_ROOT
+        .child(NODE_MAIN_LIST)
+        .child(UID)
+        .child(id)
+        .removeValue()
+        .addOnFailureListener { showToast(it.message.toString()) }
+        .addOnSuccessListener { function() }
+}
+//Функция очищает из базы данных ноды собеседника и свой чат
+fun clearChat(id: String, function: () -> Unit) {
+
+    // Сначала удаляем из своего чата
+    REF_DATA_BASE_ROOT
+        .child(NODE_MESSAGES)
+        .child(UID)
+        .child(id)
+        .removeValue()
+        .addOnFailureListener { showToast(it.message.toString()) }
+        //Здесь удаляем зеркально из чата собеседника
+        .addOnSuccessListener {
+            REF_DATA_BASE_ROOT
+            .child(NODE_MESSAGES)
+            .child(id).child(UID)
+                .removeValue()
+                .addOnSuccessListener { function() }}
+            .addOnFailureListener { showToast(it.message.toString()) }
 }

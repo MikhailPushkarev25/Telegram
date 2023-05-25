@@ -26,4 +26,6 @@
     <string name="settings_toast_FIO">Введеные вами данные изменены!</string>
     <string name="settings_hint_input_username">Имя пользователя</string>
     <string name="settings_bio">Описание</string>
+    <string name="clear_chat_menu">Очистить чат</string>
+    <string name="delete_chat_menu">Удалить чат</string>
 </resources>

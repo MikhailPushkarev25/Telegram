@@ -6,10 +6,12 @@ import android.view.View
 import android.widget.ImageView
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.telegram.R
-import com.example.telegram.ui.screense.ContactsFragment
-import com.example.telegram.ui.screense.SetingsFragment
+import com.example.telegram.ui.screense.contacts.ContactsFragment
+import com.example.telegram.ui.screense.settings.SetingsFragment
 import com.example.telegram.utilits.APP_ACTIVITY
 import com.example.telegram.database.USER
+import com.example.telegram.ui.screense.groups.AddContactsAdapter
+import com.example.telegram.ui.screense.groups.AddContactsFragment
 import com.example.telegram.utilits.downLoadAndSetImage
 import com.example.telegram.utilits.replaceFragment
 import com.mikepenz.materialdrawer.AccountHeader
@@ -129,6 +131,7 @@ class AppDrawer {
     //Проверка по id по клику на параметр
     private fun clickToItem(position: Int) {
         when(position) {
+            1 -> replaceFragment(AddContactsFragment())
             7 -> replaceFragment(SetingsFragment())
             4 -> replaceFragment(ContactsFragment())
         }
