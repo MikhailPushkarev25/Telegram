@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/create_group_photo"
+        android:layout_width="@dimen/settings_photo_username"
+        android:layout_height="@dimen/settings_photo_username_hight"
+        android:src="@drawable/ic_camera"
+        android:textSize="@dimen/settings_photo_textSize"
+        android:layout_margin="@dimen/settings_photo_marginTop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:civ_border_color="#FF000000"/>
+
+    <EditText
+        android:id="@+id/create_group_input"
+        android:layout_width="0dp"
+        android:focusableInTouchMode="true"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/create_group_photo"
+        app:layout_constraintTop_toTopOf="@+id/create_group_photo"
+        app:layout_constraintBottom_toBottomOf="@+id/create_group_photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/appPadding"/>
+
+    <TextView
+        android:id="@+id/create_group_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/setting_text_account"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textSize="@dimen/settings_text_account_size"
+        android:layout_margin="@dimen/settings_textSet_marginTop"
+        app:layout_constraintTop_toBottomOf="@id/create_group_input"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/create_group_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_group_account"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp"
+        tools:listitem="@layout/main_list_item" />
+
+    <Button
+        android:id="@+id/create_group_btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="256dp"
+        android:layout_marginLeft="256dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/button_radius"
+        android:text="ok"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

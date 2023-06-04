@@ -10,7 +10,6 @@ import com.example.telegram.ui.screense.contacts.ContactsFragment
 import com.example.telegram.ui.screense.settings.SetingsFragment
 import com.example.telegram.utilits.APP_ACTIVITY
 import com.example.telegram.database.USER
-import com.example.telegram.ui.screense.groups.AddContactsAdapter
 import com.example.telegram.ui.screense.groups.AddContactsFragment
 import com.example.telegram.utilits.downLoadAndSetImage
 import com.example.telegram.utilits.replaceFragment
@@ -18,7 +17,6 @@ import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
-import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
@@ -73,47 +71,16 @@ class AppDrawer {
                     .withName("Создать группу")
                     .withSelectable(false)
                     .withIcon(R.drawable.baseline_people_24),
-                PrimaryDrawerItem().withIdentifier(101)
-                    .withIconTintingEnabled(true)
-                    .withName("Создать секретный чат")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.baseline_lock_24),
-                PrimaryDrawerItem().withIdentifier(102)
-                    .withIconTintingEnabled(true)
-                    .withName("Создать канал")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.baseline_campaign_24),
                 PrimaryDrawerItem().withIdentifier(103)
                     .withIconTintingEnabled(true)
                     .withName("Контакты")
                     .withSelectable(false)
                     .withIcon(R.drawable.baseline_person_24),
-                PrimaryDrawerItem().withIdentifier(104)
-                    .withIconTintingEnabled(true)
-                    .withName("Звонки")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.baseline_local_phone_24),
-                PrimaryDrawerItem().withIdentifier(105)
-                    .withIconTintingEnabled(true)
-                    .withName("Избранное")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.baseline_bookmark_24),
                 PrimaryDrawerItem().withIdentifier(106)
                     .withIconTintingEnabled(true)
                     .withName("Настройки")
                     .withSelectable(false)
-                    .withIcon(R.drawable.baseline_settings_applications_24),
-                DividerDrawerItem(),
-                PrimaryDrawerItem().withIdentifier(107)
-                    .withIconTintingEnabled(true)
-                    .withName("Пригласить друга")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.baseline_person_add_alt_1_24),
-                PrimaryDrawerItem().withIdentifier(108)
-                    .withIconTintingEnabled(true)
-                    .withName("Вопросы о Telegram")
-                    .withSelectable(false)
-                    .withIcon(R.drawable.baseline_question_mark_24),
+                    .withIcon(R.drawable.baseline_settings_applications_24)
             ).withOnDrawerItemClickListener(object: Drawer.OnDrawerItemClickListener{
                 override fun onItemClick(
                     view: View?,
@@ -132,8 +99,8 @@ class AppDrawer {
     private fun clickToItem(position: Int) {
         when(position) {
             1 -> replaceFragment(AddContactsFragment())
-            7 -> replaceFragment(SetingsFragment())
-            4 -> replaceFragment(ContactsFragment())
+            3 -> replaceFragment(SetingsFragment())
+            2 -> replaceFragment(ContactsFragment())
         }
     }
 
@@ -141,7 +108,7 @@ class AppDrawer {
     private fun createHeader() {
         currentProfile = ProfileDrawerItem()
             .withName(USER.fullname)
-            .withEmail(USER.phone)
+            //.withEmail(USER.phone)
             .withIcon(USER.photoUrl)
             .withIdentifier(200)
         header = AccountHeaderBuilder()

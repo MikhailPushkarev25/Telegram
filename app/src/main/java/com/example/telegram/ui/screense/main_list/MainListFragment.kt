@@ -33,7 +33,7 @@ class MainListFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
-        APP_ACTIVITY.title = "Telegram"
+        APP_ACTIVITY.title = "Vchate"
         APP_ACTIVITY.appDrawer.enableDriver()
         hideKeyBoard()
         initRecycleView()
@@ -48,29 +48,57 @@ class MainListFragment : Fragment() {
             listItems = list.children.map { it.getCommonModel() }
             //Идем по листу по всем элементам
             listItems.forEach { model ->
-                //Деламем второй запрос к user и его id слушаем один раз и переводим всех детей в модель
-                refUsers.child(model.id).addListenerForSingleValueEvent(AppValueEventListener{ user ->
-                    val newModel = user.getCommonModel()
-                    //Делаем третий запрос к message к его id и берем самое последнее сообщение
-                    refMessages.child(model.id)
-                        .limitToLast(1)
-                        .addListenerForSingleValueEvent(AppValueEventListener{ messageElem ->
-                            val tempList = messageElem.children.map { it.getCommonModel() }
-                            if (tempList.isEmpty()) {
-                                newModel.lastMessage = "Чат очищен"
-                            } else {
-                                newModel.lastMessage = tempList[0].text
-                            }
-                            if (newModel.fullname.isEmpty()) {
-                                newModel.fullname = newModel.phone
-                            }
-                            adapter.updateListItems(newModel)
-                        })
-                })
+                when(model.type) {
+                    TYPE_CHAT -> showChat(model)
+                    TYPE_GROUP -> showGroup(model)
+                }
             }
         })
 
         recyclerView.adapter = adapter
+    }
+
+    private fun showGroup(model: CommonModel) {
+        //Деламем второй запрос к user и его id слушаем один раз и переводим всех детей в модель
+        REF_DATA_BASE_ROOT.child(NODE_GROUPS).child(model.id).addListenerForSingleValueEvent(AppValueEventListener{ user ->
+            val newModel = user.getCommonModel()
+            //Делаем третий запрос к message к его id и берем самое последнее сообщение
+            REF_DATA_BASE_ROOT.child(NODE_GROUPS).child(model.id).child(NODE_MESSAGES)
+                .limitToLast(1)
+                .addListenerForSingleValueEvent(AppValueEventListener{ messageElem ->
+                    val tempList = messageElem.children.map { it.getCommonModel() }
+                    if (tempList.isEmpty()) {
+                        newModel.lastMessage = "Чат очищен"
+                    } else {
+                        newModel.lastMessage = tempList[0].text
+                    }
+                    newModel.type = TYPE_GROUP
+                    adapter.updateListItems(newModel)
+                })
+        })
+    }
+
+    private fun showChat(model: CommonModel) {
+        //Деламем второй запрос к user и его id слушаем один раз и переводим всех детей в модель
+        refUsers.child(model.id).addListenerForSingleValueEvent(AppValueEventListener{ user ->
+            val newModel = user.getCommonModel()
+            //Делаем третий запрос к message к его id и берем самое последнее сообщение
+            refMessages.child(model.id)
+                .limitToLast(1)
+                .addListenerForSingleValueEvent(AppValueEventListener{ messageElem ->
+                    val tempList = messageElem.children.map { it.getCommonModel() }
+                    if (tempList.isEmpty()) {
+                        newModel.lastMessage = "Чат очищен"
+                    } else {
+                        newModel.lastMessage = tempList[0].text
+                    }
+                    if (newModel.fullname.isEmpty()) {
+                        newModel.fullname = newModel.phone
+                    }
+                    newModel.type = TYPE_CHAT
+                    adapter.updateListItems(newModel)
+                })
+        })
     }
 
 }

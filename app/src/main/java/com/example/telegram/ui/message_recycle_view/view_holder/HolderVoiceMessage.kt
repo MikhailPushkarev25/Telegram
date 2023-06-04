@@ -1,6 +1,8 @@
 package com.example.telegram.ui.message_recycle_view.view_holder
 
+import android.os.SystemClock
 import android.view.View
+import android.widget.Chronometer
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,12 +21,14 @@ class HolderVoiceMessage(view: View): RecyclerView.ViewHolder(view), MessageHold
     private val chatUserVoiceMessageTime: TextView = view.findViewById(R.id.chat_user_voice_message_time)
     private val chatUserBtnPlay: ImageView = view.findViewById(R.id.chat_user_btn_play)
     private val chatUserBtnStop: ImageView = view.findViewById(R.id.chat_user_btn_stop)
+    val meterUser: Chronometer? = view.findViewById<Chronometer>(R.id.c_meter_user)
 
 
     private val blockReceivingVoiceMessage: ConstraintLayout = view.findViewById(R.id.bloc_receiving_voice_message)
     private val chatReceivingVoiceMessageTime: TextView = view.findViewById(R.id.chat_recived_voice_message_time)
     private val chatReceivingBtnPlay: ImageView = view.findViewById(R.id.chat_recived_btn_play)
     private val chatReceivingBtnStop: ImageView = view.findViewById(R.id.chat_recived_btn_stop)
+    val meterReceiving: Chronometer? = view.findViewById<Chronometer>(R.id.c_meter_user)
 
 
     //Функция отрисовывает звук
@@ -44,6 +48,10 @@ class HolderVoiceMessage(view: View): RecyclerView.ViewHolder(view), MessageHold
         appVoicePlayer.init()
         if (view.from == UID) {
             chatUserBtnPlay.setOnClickListener {
+                if (it.isClickable) {
+                    meterUser?.start()
+                }
+                meterUser?.base = SystemClock.elapsedRealtime()
                 chatUserBtnPlay.visibility = View.GONE
                 chatUserBtnStop.visibility = View.VISIBLE
                 chatUserBtnStop.setOnClickListener {
@@ -56,10 +64,16 @@ class HolderVoiceMessage(view: View): RecyclerView.ViewHolder(view), MessageHold
                 play(view) {
                     chatUserBtnPlay.visibility = View.VISIBLE
                     chatUserBtnStop.visibility = View.GONE
+                    meterUser?.stop()
                 }
             }
+
         } else {
             chatReceivingBtnPlay.setOnClickListener {
+                if (it.isClickable) {
+                    meterReceiving?.start()
+                }
+                meterReceiving?.base = SystemClock.elapsedRealtime()
                 chatReceivingBtnPlay.visibility = View.GONE
                 chatReceivingBtnStop.visibility = View.VISIBLE
                 chatReceivingBtnStop.setOnClickListener {
@@ -72,6 +86,7 @@ class HolderVoiceMessage(view: View): RecyclerView.ViewHolder(view), MessageHold
                 play(view) {
                     chatReceivingBtnPlay.visibility = View.VISIBLE
                     chatReceivingBtnStop.visibility = View.GONE
+                    meterReceiving?.stop()
                 }
             }
         }
@@ -80,10 +95,12 @@ class HolderVoiceMessage(view: View): RecyclerView.ViewHolder(view), MessageHold
     private fun play(view: MessageView, function: () -> Unit) {
         appVoicePlayer.play(view.id, view.fileUrl){
             function()
+
         }
     }
 
     fun stop(function: () -> Unit) {
+
         appVoicePlayer.stop {
                 function()
         }

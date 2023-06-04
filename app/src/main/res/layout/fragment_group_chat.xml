@@ -15,16 +15,16 @@
         tools:context=".ui.screense.singleChat.SingleChatFragment">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/chat_swipe_refresh"
+            android:id="@+id/group_chat_swipe_refresh"
             android:layout_width="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_item_info"
-            app:layout_constraintBottom_toTopOf="@id/chat_input_message"
+            app:layout_constraintTop_toBottomOf="@+id/group_toolbar_item_info"
+            app:layout_constraintBottom_toTopOf="@id/group_chat_input_message"
             android:layout_height="0dp">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/chat_recycleView"
+                android:id="@+id/group_chat_recycleView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@drawable/background_phone_chat"/>
@@ -32,14 +32,14 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/toolbar_item_info"
+            android:id="@+id/group_toolbar_item_info"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimaryDark"
             tools:ignore="MissingConstraints">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/toolbar_chat_image"
+                android:id="@+id/group_toolbar_chat_image"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/user"
@@ -49,26 +49,26 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
-                android:id="@+id/contact_chat_fullname"
+                android:id="@+id/group_contact_chat_fullname"
                 style="@style/normalText"
                 tools:text="Mikhail Pushkarev"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toEndOf="@+id/toolbar_chat_image"
+                app:layout_constraintStart_toEndOf="@+id/group_toolbar_chat_image"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
-                android:id="@+id/contact_chat_status"
+                android:id="@+id/group_contact_chat_status"
                 style="@style/smalText"
                 tools:text="в сети"
                 android:textColor="@color/white_subtext"
-                app:layout_constraintStart_toEndOf="@+id/toolbar_chat_image"
-                app:layout_constraintTop_toBottomOf="@+id/contact_chat_fullname"/>
+                app:layout_constraintStart_toEndOf="@+id/group_toolbar_chat_image"
+                app:layout_constraintTop_toBottomOf="@+id/group_contact_chat_fullname"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Chronometer
-            android:id="@+id/c_meter_single"
+            android:id="@+id/c_meter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -76,11 +76,11 @@
             android:textColor="#092FEC"
             android:textSize="36sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chat_btn_message"
+            app:layout_constraintEnd_toStartOf="@+id/group_chat_btn_message"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
-            android:id="@+id/chat_input_message"
+            android:id="@+id/group_chat_input_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Сообщение"
@@ -88,11 +88,11 @@
             android:textColor="@color/black"
             android:textColorHint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chat_btn_message"
+            app:layout_constraintEnd_toStartOf="@+id/group_chat_btn_message"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:id="@+id/chat_btn_message"
+            android:id="@+id/group_chat_btn_message"
             android:layout_width="50dp"
             android:layout_height="0dp"
             android:padding="@dimen/appPadding"
@@ -100,21 +100,21 @@
             android:src="@drawable/baseline_send_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/chat_input_message" />
+            app:layout_constraintTop_toTopOf="@+id/group_chat_input_message" />
 
         <ImageView
-            android:id="@+id/chat_btn_attach_message"
+            android:id="@+id/group_chat_btn_attach_message"
             android:layout_width="50dp"
             android:layout_height="0dp"
             android:padding="@dimen/appPadding"
             android:background="@color/white"
             android:src="@drawable/baseline_attach_file_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chat_btn_voice_message"
-            app:layout_constraintTop_toTopOf="@+id/chat_input_message" />
+            app:layout_constraintEnd_toStartOf="@+id/group_chat_btn_voice_message"
+            app:layout_constraintTop_toTopOf="@+id/group_chat_input_message" />
 
         <ImageView
-            android:id="@+id/chat_btn_voice_message"
+            android:id="@+id/group_chat_btn_voice_message"
             android:layout_width="50dp"
             android:layout_height="0dp"
             android:padding="@dimen/appPadding"
@@ -122,7 +122,7 @@
             android:src="@drawable/baseline_keyboard_voice_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/chat_input_message" />
+            app:layout_constraintTop_toTopOf="@+id/group_chat_input_message" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

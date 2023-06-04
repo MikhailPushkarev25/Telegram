@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegram.R
+import com.example.telegram.database.TYPE_CHAT
+import com.example.telegram.database.TYPE_GROUP
 import com.example.telegram.models.CommonModel
+import com.example.telegram.ui.screense.groups.GroupChatFragment
 import com.example.telegram.ui.screense.singleChat.SingleChatFragment
 import com.example.telegram.utilits.downLoadAndSetImage
 import com.example.telegram.utilits.replaceFragment
@@ -26,7 +29,11 @@ class MainListAdapter: RecyclerView.Adapter<MainListAdapter.MainListHolder>() {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.main_list_item, parent, false)
         val holder = MainListHolder(view)
         holder.itemView.setOnClickListener {
-            replaceFragment(SingleChatFragment(listItems[holder.adapterPosition]))
+            when(listItems[holder.adapterPosition].type) {
+
+                TYPE_CHAT -> replaceFragment(SingleChatFragment(listItems[holder.adapterPosition]))
+                TYPE_GROUP ->  replaceFragment(GroupChatFragment(listItems[holder.adapterPosition]))
+        }
         }
         return holder
     }

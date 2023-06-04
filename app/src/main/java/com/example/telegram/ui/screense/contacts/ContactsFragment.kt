@@ -81,7 +81,6 @@ class ContactsFragment : BaseFragment() {
             }
 
         }
-
         recycleView.adapter = adapter
         adapter.startListening()
     }

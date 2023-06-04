@@ -48,9 +48,18 @@ const val CHILD_TEXT = "text"
 const val CHILD_TYPE = "type"
 const val CHILD_FROM = "from"
 const val CHILD_TIMESTAMP = "timeStamp"
+const val CHILD_TIMER = "timer"
 const val CHILD_FILE_URL = "fileUrl"
 
 //Ноды для вывода чатов на главный экран
 const val NODE_MAIN_LIST = "main_list"
 
+//Константы для создания нод в базе данных для групп
+const val NODE_GROUPS = "groups"
+const val NODE_MEMBERS = "members"
+const val FOLDER_GROUPS_IMAGE = "groups_image"
+//Уровни типов в группе
+const val USER_CREATOR = "creator"
+const val USER_ADMIN = "admin"
+const val USER_MEMBER = "member"
 

@@ -105,5 +105,9 @@ fun getFileNameFromUri(uri: Uri): String {
         cursor?.close()
         return result
     }
-
 }
+
+//Функция определяет колличество участников и добавляет окончание к ним
+fun getPlurals(count: Int) = APP_ACTIVITY.resources.getQuantityString(
+    R.plurals.count_members, count, count
+)

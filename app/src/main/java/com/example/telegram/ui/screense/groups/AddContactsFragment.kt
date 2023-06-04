@@ -4,21 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegram.database.*
 import com.example.telegram.databinding.FragmentAddContactsBinding
 import com.example.telegram.models.CommonModel
-import com.example.telegram.utilits.APP_ACTIVITY
-import com.example.telegram.utilits.AppValueEventListener
-import com.example.telegram.utilits.hideKeyBoard
+import com.example.telegram.ui.screense.base.BaseFragment
+import com.example.telegram.utilits.*
 
-class AddContactsFragment : Fragment() {
+class AddContactsFragment : BaseFragment() {
 
     private lateinit var chat: FragmentAddContactsBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AddContactsAdapter
-    private val refMainList = REF_DATA_BASE_ROOT.child(NODE_MAIN_LIST).child(UID)
+    private val refContactList = REF_DATA_BASE_ROOT.child(NODE_PHONES_CONTACTS).child(UID)
     private val refUsers = REF_DATA_BASE_ROOT.child(NODE_USERS)
     private val refMessages = REF_DATA_BASE_ROOT.child(NODE_MESSAGES).child(UID)
     private var listItems = listOf<CommonModel>()
@@ -33,14 +31,13 @@ class AddContactsFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        listContacts.clear()
         APP_ACTIVITY.title = "Добавить участника"
-        APP_ACTIVITY.appDrawer.enableDriver()
         hideKeyBoard()
         initRecycleView()
         chat.addContactsBtnNext.setOnClickListener {
-            listContacts.forEach{
-                println(it.id)
-            }
+            if (listContacts.isEmpty()) showToast("Добавьте участника")
+                else replaceFragment(CreateGroupFragment(listContacts))
         }
     }
 
@@ -49,7 +46,7 @@ class AddContactsFragment : Fragment() {
         recyclerView = chat.addContactsRecycleView
         adapter = AddContactsAdapter()
         //Первый запрос идет по всем детям ноды main_list создает мапу и трансформирует все в модельку и в list
-        refMainList.addListenerForSingleValueEvent(AppValueEventListener{ list ->
+        refContactList.addListenerForSingleValueEvent(AppValueEventListener{ list ->
             listItems = list.children.map { it.getCommonModel() }
             //Идем по листу по всем элементам
             listItems.forEach { model ->

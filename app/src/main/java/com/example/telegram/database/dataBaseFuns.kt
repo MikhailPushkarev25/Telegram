@@ -15,6 +15,7 @@ import com.google.firebase.database.ServerValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
+import java.util.HashMap
 
 // Инициализация самой базы данных
 fun initFireBase() {
@@ -295,3 +296,117 @@ fun clearChat(id: String, function: () -> Unit) {
                 .addOnSuccessListener { function() }}
             .addOnFailureListener { showToast(it.message.toString()) }
 }
+
+//Функция создает ноды в базе данных и отправляет данные пользователю
+fun createGroupToDB(
+    nameGroup: String,
+    uri: Uri,
+    listContacts: List<CommonModel>,
+    function: () -> Unit
+) {
+    val keyGroup = REF_DATA_BASE_ROOT.child(NODE_GROUPS).push().key.toString()
+    val path = REF_DATA_BASE_ROOT.child(NODE_GROUPS).child(keyGroup)
+    val pathImage = REF_STORAGE_ROOT.child(FOLDER_GROUPS_IMAGE).child(keyGroup)
+
+    val mapData = hashMapOf<String, Any>()
+    mapData[CHILD_ID] = keyGroup
+    mapData[CHILD_FULLNAME] = nameGroup
+    mapData[CHILD_PHOTO_URL] = "empty"
+
+    val mapMembers = hashMapOf<String, Any>()
+    listContacts.forEach {
+        mapMembers[it.id] = USER_MEMBER
+    }
+    mapMembers[UID] = USER_CREATOR
+
+    mapData[NODE_MEMBERS] = mapMembers
+
+    path.updateChildren(mapData)
+        .addOnSuccessListener {
+            if (uri != Uri.EMPTY) {
+                putFileToStorage(uri, pathImage) {
+                    getUrlFromStorage(pathImage) { it ->
+                        path.child(CHILD_PHOTO_URL).setValue(it)
+                        addGroupsToMainList(mapData, listContacts) {
+                            function()
+                        }
+                    }
+                }
+            } else {
+                addGroupsToMainList(mapData, listContacts) {
+                    function()
+                }
+            }
+        }
+        .addOnFailureListener { showToast(it.message.toString()) }
+}
+//Функция добавляет всю информацию о группах в главный лист
+fun addGroupsToMainList(
+    mapData: HashMap<String, Any>,
+    listContacts: List<CommonModel>,
+    function: () -> Unit
+) {
+  val path = REF_DATA_BASE_ROOT.child(NODE_MAIN_LIST)
+    val map = hashMapOf<String, Any>()
+    map[CHILD_ID] = mapData[CHILD_ID].toString()
+    map[CHILD_TYPE] = TYPE_GROUP
+    listContacts.forEach {
+        path.child(it.id).child(map[CHILD_ID].toString()).updateChildren(map)
+    }
+    path.child(UID).child(map[CHILD_ID].toString()).updateChildren(map)
+        .addOnSuccessListener { function() }
+        .addOnFailureListener { showToast(it.message.toString()) }
+}
+
+// Функция создает ноды в базе для хранения групп, эти данные кладутся в мапу, далее по ключу выводятся пользователю
+fun sendMessageToGroup(message: String, groupId: String, typeText: String, function: () -> Unit) {
+
+    val refMessages = "$NODE_GROUPS/$groupId/$NODE_MESSAGES"
+    val messageKey = REF_DATA_BASE_ROOT.child(refMessages).push().key
+
+    val mapMessage = hashMapOf<String, Any>()
+    mapMessage[CHILD_FROM] = UID
+    mapMessage[CHILD_TYPE] = typeText
+    mapMessage[CHILD_TEXT] = message
+    mapMessage[CHILD_ID] = messageKey.toString()
+    mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
+
+    REF_DATA_BASE_ROOT.child(refMessages).child(messageKey.toString())
+        .updateChildren(mapMessage)
+        .addOnSuccessListener { function() }
+        .addOnFailureListener { showToast(it.message.toString()) }
+}
+
+// Функция сохраняет аудио файл по окончании записи
+fun uploadFileToStorageToGroup(uri: Uri, messageKey: String, receivingId: String, typeGroups: String, filename: String = "") {
+    val paf = REF_STORAGE_ROOT
+        .child(FOLDER_FILES)
+        .child(messageKey)
+    putFileToStorage(uri, paf) {
+        getUrlFromStorage(paf) {
+            sendMessageAsFileToGroups(receivingId, it, messageKey, typeGroups, filename)
+        }
+    }
+}
+
+//Функция берет ссылку из базы и скачивает пользователю в группу
+fun sendMessageAsFileToGroups(receivingUserId: String, fileUrl: String, messageKey: String, typeGroups: String, filename: String) {
+    val refDialogUser = "$NODE_GROUPS/$receivingUserId/$NODE_MESSAGES"
+    val messageKey = REF_DATA_BASE_ROOT.child(refDialogUser).push().key
+
+    val mapMessage = hashMapOf<String, Any>()
+    mapMessage[CHILD_FROM] = UID
+    mapMessage[CHILD_TYPE] = typeGroups
+    mapMessage[CHILD_ID] = messageKey.toString()
+    mapMessage[CHILD_TIMESTAMP] = ServerValue.TIMESTAMP
+    mapMessage[CHILD_FILE_URL] = fileUrl
+    mapMessage[CHILD_TEXT] = filename
+
+    REF_DATA_BASE_ROOT.child(refDialogUser).child(messageKey.toString())
+        .updateChildren(mapMessage)
+        .addOnFailureListener { showToast(it.message.toString()) }
+}
+
+//Функция возвращает ключ ноды
+fun getGroupKey(id: String) = REF_DATA_BASE_ROOT.child(NODE_GROUPS).child(UID)
+    .child(id).push().key.toString()

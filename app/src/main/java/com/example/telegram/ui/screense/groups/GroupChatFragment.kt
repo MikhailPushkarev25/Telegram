@@ -1,4 +1,4 @@
-package com.example.telegram.ui.screense.singleChat
+package com.example.telegram.ui.screense.groups
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -6,15 +6,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.AbsListView
 import android.widget.Chronometer
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.telegram.R
 import com.example.telegram.database.*
+import com.example.telegram.databinding.FragmentGroupChatBinding
 import com.example.telegram.databinding.FragmentSingleChatBinding
+import com.example.telegram.databinding.MessageItemVoiceBinding
 import com.example.telegram.models.CommonModel
 import com.example.telegram.models.User
 import com.example.telegram.ui.screense.base.BaseFragment
@@ -29,13 +34,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
-    lateinit var singleChat: FragmentSingleChatBinding
+class GroupChatFragment(private val group: CommonModel) : BaseFragment() {
+    lateinit var singleChat: FragmentGroupChatBinding
     private lateinit var listenerInfoToolbar: AppValueEventListener
     private lateinit var receivengUser: User
     private lateinit var refUser: DatabaseReference
     private lateinit var refMessages: DatabaseReference
-    private lateinit var adapter: SingleChatAdapter
+    private lateinit var adapter: GroupChatAdapter
     private lateinit var recycleView: RecyclerView
     private lateinit var messagesListener: AppChildValueEventListener
     private var countMessage = 15
@@ -50,7 +55,7 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        singleChat = FragmentSingleChatBinding.inflate(inflater, container, false)
+        singleChat = FragmentGroupChatBinding.inflate(inflater, container, false)
         return singleChat.root
     }
     override fun onResume() {
@@ -62,53 +67,53 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initFields() {
-        val meter: Chronometer? = view?.findViewById<Chronometer>(R.id.c_meter_single)
+        val meter: Chronometer? = view?.findViewById<Chronometer>(R.id.c_meter)
         setHasOptionsMenu(true)
         bottomSheetBehavior = BottomSheetBehavior.from(singleChat.cheet.bottomSheetChoice)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         appVoiceRecord = AppVoiceRecord()
-        swipeRefreshLayout = singleChat.chatSwipeRefresh
+        swipeRefreshLayout = singleChat.groupChatSwipeRefresh
         layoutManager = LinearLayoutManager(this.context)
-        singleChat.chatInputMessage.addTextChangedListener(AppTextWeatcher{
-            val string = singleChat.chatInputMessage.text.toString()
+        singleChat.groupChatInputMessage.addTextChangedListener(AppTextWeatcher{
+            val string = singleChat.groupChatInputMessage.text.toString()
             if (string.isEmpty() || string == "Запись") {
-                singleChat.chatBtnMessage.visibility = View.GONE
-                singleChat.chatBtnAttachMessage.visibility = View.VISIBLE
-                singleChat.chatBtnVoiceMessage.visibility = View.VISIBLE
+                singleChat.groupChatBtnMessage.visibility = View.GONE
+                singleChat.groupChatBtnAttachMessage.visibility = View.VISIBLE
+                singleChat.groupChatBtnVoiceMessage.visibility = View.VISIBLE
             } else {
-                singleChat.chatBtnMessage.visibility = View.VISIBLE
-                singleChat.chatBtnAttachMessage.visibility = View.GONE
-                singleChat.chatBtnVoiceMessage.visibility = View.GONE
+                singleChat.groupChatBtnMessage.visibility = View.VISIBLE
+                singleChat.groupChatBtnAttachMessage.visibility = View.GONE
+                singleChat.groupChatBtnVoiceMessage.visibility = View.GONE
             }
         })
-        singleChat.chatBtnAttachMessage.setOnClickListener { attach() }
+        singleChat.groupChatBtnAttachMessage.setOnClickListener { attach() }
 
         //Корутины запускает слушатель записи звука
         CoroutineScope(Dispatchers.IO).launch {
-            singleChat.chatBtnVoiceMessage.setOnTouchListener { v, event ->
+            singleChat.groupChatBtnVoiceMessage.setOnTouchListener { v, event ->
                 if (checkPermissions(RECORD_AUDIO)) {
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         //TODO record
                         meter?.base = SystemClock.elapsedRealtime()
                         meter?.start()
-                        singleChat.cMeterSingle.visibility = View.VISIBLE
-                        singleChat.chatInputMessage.visibility = View.GONE
-                        singleChat.chatBtnVoiceMessage.setColorFilter(
+                        singleChat.cMeter.visibility = View.VISIBLE
+                        singleChat.groupChatInputMessage.visibility = View.GONE
+                        singleChat.groupChatBtnVoiceMessage.setColorFilter(
                             ContextCompat.getColor(
                                 APP_ACTIVITY,
                                 R.color.material_drawer_primary
                             )
                         )
-                        val messageKey = getMessageKey(contact.id)
-                        appVoiceRecord.startRecord(messageKey)
+                        val groupKey = getGroupKey(group.id)
+                        appVoiceRecord.startRecord(groupKey)
                     } else if (event.action == MotionEvent.ACTION_UP) {
-                        //TODO stop record
+
                         meter?.base = SystemClock.elapsedRealtime()
-                        singleChat.chatInputMessage.visibility = View.VISIBLE
-                        singleChat.cMeterSingle.visibility = View.GONE
-                        singleChat.chatBtnVoiceMessage.colorFilter = null
+                        singleChat.groupChatInputMessage.visibility = View.VISIBLE
+                        singleChat.cMeter.visibility = View.GONE
+                        singleChat.groupChatBtnVoiceMessage.colorFilter = null
                         appVoiceRecord.stopRecord() { file, messageKey ->
-                            uploadFileToStorage(Uri.fromFile(file), messageKey, contact.id, TYPE_MESSAGE_VOICE)
+                            uploadFileToStorageToGroup(Uri.fromFile(file), messageKey, group.id, TYPE_MESSAGE_VOICE)
                             isSmoothScrollToPosition = true
                         }
                     }
@@ -141,12 +146,12 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
 
     //Функция создает в базе ноду в которой храняться данные для сообщений
     private fun initRecycleView() {
-        recycleView = singleChat.chatRecycleView
-        adapter = SingleChatAdapter()
+        recycleView = singleChat.groupChatRecycleView
+        adapter = GroupChatAdapter()
         refMessages = REF_DATA_BASE_ROOT
+            .child(NODE_GROUPS)
+            .child(group.id)
             .child(NODE_MESSAGES)
-            .child(UID)
-            .child(contact.id)
         recycleView.adapter = adapter
         recycleView.setHasFixedSize(true)
         recycleView.isNestedScrollingEnabled = false
@@ -202,16 +207,15 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
             receivengUser = it.getUserModel()
             initInfoToolBar()
         }
-        refUser = REF_DATA_BASE_ROOT.child(NODE_USERS).child(contact.id)
+        refUser = REF_DATA_BASE_ROOT.child(NODE_USERS).child(group.id)
         refUser.addValueEventListener(listenerInfoToolbar)
-        singleChat.chatBtnMessage.setOnClickListener {
+        singleChat.groupChatBtnMessage.setOnClickListener {
             isSmoothScrollToPosition = true
-            val message = singleChat.chatInputMessage.text.toString()
+            val message = singleChat.groupChatInputMessage.text.toString()
             if (message.isEmpty()) {
                 showToast("Необходимо ввести сообщение!")
-            } else sendMessage(message, contact.id, TYPE_MESSAGE_TEXT) {
-                saveToMainList(contact.id, TYPE_CHAT)
-                singleChat.chatInputMessage.setText("")
+            } else sendMessageToGroup(message, group.id, TYPE_MESSAGE_TEXT) {
+                singleChat.groupChatInputMessage.setText("")
             }
         }
     }
@@ -219,10 +223,10 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
     //Инициализация данных тулбара
     private fun initInfoToolBar() {
         if (receivengUser.fullname.isEmpty()) {
-            singleChat.contactChatFullname.text = contact.fullname
-        } else  singleChat.contactChatFullname.text = receivengUser.fullname
-        singleChat.toolbarChatImage.downLoadAndSetImage(receivengUser.photoUrl)
-        singleChat.contactChatStatus.text = receivengUser.state
+            singleChat.groupContactChatFullname.text = group.fullname
+        } else  singleChat.groupContactChatFullname.text = receivengUser.fullname
+        singleChat.groupToolbarChatImage.downLoadAndSetImage(group.photoUrl)
+        singleChat.groupContactChatStatus.text = receivengUser.state
     }
 
     //Функция принимает слушатель и качает из базы файлы
@@ -232,17 +236,17 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
         if (data != null) {
             when (requestCode) {
                 CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
-                    val messageKey = getMessageKey(contact.id)
+                    val messageKey = getGroupKey(group.id)
                     val uri = CropImage.getActivityResult(data).uri
-                    uploadFileToStorage(uri, messageKey, contact.id, TYPE_MESSAGE_IMAGE)
+                    uploadFileToStorageToGroup(uri, messageKey, group.id, TYPE_MESSAGE_IMAGE)
                     isSmoothScrollToPosition = true
                 }
 
                 PICK_FILE_REQUEST_CODE -> {
                     val uri = data.data
-                    val messageKey = getMessageKey(contact.id)
+                    val messageKey = getGroupKey(group.id)
                     val filename = getFileNameFromUri(uri!!)
-                    uploadFileToStorage(uri, messageKey, contact.id, TYPE_MESSAGE_FILE, filename)
+                    uploadFileToStorageToGroup(uri, messageKey, group.id, TYPE_MESSAGE_FILE, filename)
                     isSmoothScrollToPosition = true
                 }
             }
@@ -270,11 +274,11 @@ class SingleChatFragment(private val contact: CommonModel) : BaseFragment() {
     //Функция отрабатывает при выходе и меняет статус слушает пункты меню
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.menu_clear_chat -> clearChat(contact.id) {
+            R.id.menu_clear_chat -> clearChat(group.id) {
                 showToast("Чат очищен!")
                 replaceFragment(MainListFragment())
             }
-            R.id.menu_delete_chat -> deleteChat(contact.id) {
+            R.id.menu_delete_chat -> deleteChat(group.id) {
                 showToast("Чат удален!")
                 replaceFragment(MainListFragment())
             }
